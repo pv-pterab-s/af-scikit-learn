@@ -5,14 +5,14 @@ from functools import wraps
 import pytest
 from threadpoolctl import threadpool_limits
 
-from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
-from sklearn.datasets import fetch_20newsgroups
-from sklearn.datasets import fetch_20newsgroups_vectorized
-from sklearn.datasets import fetch_california_housing
-from sklearn.datasets import fetch_covtype
-from sklearn.datasets import fetch_kddcup99
-from sklearn.datasets import fetch_olivetti_faces
-from sklearn.datasets import fetch_rcv1
+from afsklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from afsklearn.datasets import fetch_20newsgroups
+from afsklearn.datasets import fetch_20newsgroups_vectorized
+from afsklearn.datasets import fetch_california_housing
+from afsklearn.datasets import fetch_covtype
+from afsklearn.datasets import fetch_kddcup99
+from afsklearn.datasets import fetch_olivetti_faces
+from afsklearn.datasets import fetch_rcv1
 
 
 dataset_fetchers = {

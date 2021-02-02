@@ -298,7 +298,7 @@ class BaseEstimator:
         except AttributeError:
             state = self.__dict__.copy()
 
-        if type(self).__module__.startswith('sklearn.'):
+        if type(self).__module__.startswith('afsklearn.'):
             return dict(state.items(), _sklearn_version=__version__)
         else:
             return state
