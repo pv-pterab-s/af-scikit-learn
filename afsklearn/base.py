@@ -304,7 +304,7 @@ class BaseEstimator:
             return state
 
     def __setstate__(self, state):
-        if type(self).__module__.startswith('sklearn.'):
+        if type(self).__module__.startswith('afsklearn.'):
             pickle_version = state.pop("_sklearn_version", "pre-0.18")
             if pickle_version != __version__:
                 warnings.warn(
