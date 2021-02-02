@@ -32,19 +32,19 @@ except ImportError:
 builtins.__SKLEARN_SETUP__ = True
 
 
-DISTNAME = 'scikit-learn'
-DESCRIPTION = 'A set of python modules for machine learning and data mining'
+DISTNAME = 'af-scikit-learn'
+DESCRIPTION = 'Arrayfire set of python modules for machine learning and data mining'
 with open('README.rst') as f:
     LONG_DESCRIPTION = f.read()
 MAINTAINER = 'Andreas Mueller'
 MAINTAINER_EMAIL = 'amueller@ais.uni-bonn.de'
-URL = 'http://scikit-learn.org'
-DOWNLOAD_URL = 'https://pypi.org/project/scikit-learn/#files'
+URL = 'http://af-scikit-learn.org'
+DOWNLOAD_URL = 'https://pypi.org/project/af-scikit-learn/#files'
 LICENSE = 'new BSD'
 PROJECT_URLS = {
-    'Bug Tracker': 'https://github.com/scikit-learn/scikit-learn/issues',
-    'Documentation': 'https://scikit-learn.org/stable/documentation.html',
-    'Source Code': 'https://github.com/scikit-learn/scikit-learn'
+    'Bug Tracker': 'boo',
+    'Documentation': 'foo',
+    'Source Code': 'doo'
 }
 
 # We can actually import a restricted version of sklearn that
