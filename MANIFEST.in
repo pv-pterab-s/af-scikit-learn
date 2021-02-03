@@ -1,14 +1,14 @@
 include *.rst
 recursive-include doc *
 recursive-include examples *
-recursive-include sklearn *.c *.h *.pyx *.pxd *.pxi *.tp
-recursive-include sklearn/datasets *.csv *.csv.gz *.rst *.jpg *.txt *.arff.gz *.json.gz
+recursive-include afsklearn *.c *.h *.pyx *.pxd *.pxi *.tp
+recursive-include afsklearn/datasets *.csv *.csv.gz *.rst *.jpg *.txt *.arff.gz *.json.gz
 include COPYING
 include README.rst
 include pyproject.toml
-include sklearn/externals/README
-include sklearn/svm/src/liblinear/COPYRIGHT
-include sklearn/svm/src/libsvm/LIBSVM_CHANGES
+include afsklearn/externals/README
+include afsklearn/svm/src/liblinear/COPYRIGHT
+include afsklearn/svm/src/libsvm/LIBSVM_CHANGES
 include conftest.py
 include Makefile
 include MANIFEST.in

@@ -32,28 +32,28 @@ except ImportError:
 builtins.__SKLEARN_SETUP__ = True
 
 
-DISTNAME = 'scikit-learn'
-DESCRIPTION = 'A set of python modules for machine learning and data mining'
+DISTNAME = 'af-scikit-learn'
+DESCRIPTION = 'Arrayfire set of python modules for machine learning and data mining'
 with open('README.rst') as f:
     LONG_DESCRIPTION = f.read()
 MAINTAINER = 'Andreas Mueller'
 MAINTAINER_EMAIL = 'amueller@ais.uni-bonn.de'
-URL = 'http://scikit-learn.org'
-DOWNLOAD_URL = 'https://pypi.org/project/scikit-learn/#files'
+URL = 'http://af-scikit-learn.org'
+DOWNLOAD_URL = 'https://pypi.org/project/af-scikit-learn/#files'
 LICENSE = 'new BSD'
 PROJECT_URLS = {
-    'Bug Tracker': 'https://github.com/scikit-learn/scikit-learn/issues',
-    'Documentation': 'https://scikit-learn.org/stable/documentation.html',
-    'Source Code': 'https://github.com/scikit-learn/scikit-learn'
+    'Bug Tracker': 'boo',
+    'Documentation': 'foo',
+    'Source Code': 'doo'
 }
 
 # We can actually import a restricted version of sklearn that
 # does not need the compiled code
-import sklearn
-import sklearn._min_dependencies as min_deps  # noqa
+import afsklearn
+import afsklearn._min_dependencies as min_deps  # noqa
 
 
-VERSION = sklearn.__version__
+VERSION = afsklearn.__version__
 
 
 # For some commands, use setuptools
@@ -90,7 +90,7 @@ class CleanCommand(Clean):
             print('Will remove generated .c files')
         if os.path.exists('build'):
             shutil.rmtree('build')
-        for dirpath, dirnames, filenames in os.walk('sklearn'):
+        for dirpath, dirnames, filenames in os.walk('afsklearn'):
             for filename in filenames:
                 if any(filename.endswith(suffix) for suffix in
                        (".so", ".pyd", ".dll", ".pyc")):
@@ -130,9 +130,9 @@ try:
                 print("setting parallel=%d " % self.parallel)
 
         def build_extensions(self):
-            from sklearn._build_utils.openmp_helpers import get_openmp_flag
+            from afsklearn._build_utils.openmp_helpers import get_openmp_flag
 
-            if sklearn._OPENMP_SUPPORTED:
+            if afsklearn._OPENMP_SUPPORTED:
                 openmp_flag = get_openmp_flag(self.compiler)
 
                 for e in self.extensions:
@@ -168,7 +168,7 @@ def configuration(parent_package='', top_path=None):
         os.remove('MANIFEST')
 
     from numpy.distutils.misc_util import Configuration
-    from sklearn._build_utils import _check_cython_version
+    from afsklearn._build_utils import _check_cython_version
 
     config = Configuration(None, parent_package, top_path)
 
@@ -185,7 +185,7 @@ def configuration(parent_package='', top_path=None):
     # message from the start if it's not the case.
     _check_cython_version()
 
-    config.add_subpackage('sklearn')
+    config.add_subpackage('afsklearn')
 
     return config
 

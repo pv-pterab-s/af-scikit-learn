@@ -11,10 +11,10 @@ import sys
 import pytest
 from _pytest.doctest import DoctestItem
 
-from sklearn.utils import _IS_32BIT
-from sklearn.externals import _pilutil
-from sklearn._min_dependencies import PYTEST_MIN_VERSION
-from sklearn.utils.fixes import np_version, parse_version
+from afsklearn.utils import _IS_32BIT
+from afsklearn.externals import _pilutil
+from afsklearn._min_dependencies import PYTEST_MIN_VERSION
+from afsklearn.utils.fixes import np_version, parse_version
 
 if parse_version(pytest.__version__) < parse_version(PYTEST_MIN_VERSION):
     raise ImportError('Your version of pytest is too old, you should have '
@@ -71,8 +71,8 @@ def pytest_collection_modifyitems(config, items):
         skip_marker = pytest.mark.skip(reason="pillow (or PIL) not installed!")
         for item in items:
             if item.name in [
-                    "sklearn.feature_extraction.image.PatchExtractor",
-                    "sklearn.feature_extraction.image.extract_patches_2d"]:
+                    "afsklearn.feature_extraction.image.PatchExtractor",
+                    "afsklearn.feature_extraction.image.extract_patches_2d"]:
                 item.add_marker(skip_marker)
 
 

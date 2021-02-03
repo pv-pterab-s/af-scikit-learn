@@ -1,7 +1,7 @@
 import sys
 import os
 
-from sklearn._build_utils import cythonize_extensions
+from afsklearn._build_utils import cythonize_extensions
 
 
 def configuration(parent_package='', top_path=None):
@@ -12,7 +12,7 @@ def configuration(parent_package='', top_path=None):
     if os.name == 'posix':
         libraries.append('m')
 
-    config = Configuration('sklearn', parent_package, top_path)
+    config = Configuration('afsklearn', parent_package, top_path)
 
     # submodules with build utilities
     config.add_subpackage('__check_build')

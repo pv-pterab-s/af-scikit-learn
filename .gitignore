@@ -8,8 +8,8 @@
 *.swo
 .DS_Store
 build
-sklearn/datasets/__config__.py
-sklearn/**/*.html
+afsklearn/datasets/__config__.py
+afsklearn/**/*.html
 
 dist/
 MANIFEST
@@ -21,7 +21,7 @@ doc/min_dependency_table.rst
 doc/min_dependency_substitutions.rst
 *.pdf
 pip-log.txt
-scikit_learn.egg-info/
+af_scikit_learn.egg-info/
 .coverage
 coverage
 *.py,cover
@@ -76,6 +76,6 @@ _configtest.o.d
 .mypy_cache/
 
 # files generated from a template
-sklearn/utils/_seq_dataset.pyx
-sklearn/utils/_seq_dataset.pxd
-sklearn/linear_model/_sag_fast.pyx
+afsklearn/utils/_seq_dataset.pyx
+afsklearn/utils/_seq_dataset.pxd
+afsklearn/linear_model/_sag_fast.pyx

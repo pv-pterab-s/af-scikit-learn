@@ -6,7 +6,7 @@ Utilities useful during the build.
 
 
 import os
-import sklearn
+import afsklearn
 import contextlib
 
 from distutils.version import LooseVersion
@@ -16,7 +16,7 @@ from .openmp_helpers import check_openmp_support
 from .._min_dependencies import CYTHON_MIN_VERSION
 
 
-DEFAULT_ROOT = 'sklearn'
+DEFAULT_ROOT = 'afsklearn'
 
 
 def _check_cython_version():
@@ -56,7 +56,7 @@ def cythonize_extensions(top_path, config):
     #   cython build-time variable passed to the cythonize() call.
     # - Then in the build_ext subclass defined in the top-level setup.py file
     #   to actually build the compiled extensions with OpenMP flags if needed.
-    sklearn._OPENMP_SUPPORTED = check_openmp_support()
+    afsklearn._OPENMP_SUPPORTED = check_openmp_support()
 
     n_jobs = 1
     with contextlib.suppress(ImportError):
@@ -71,7 +71,7 @@ def cythonize_extensions(top_path, config):
         config.ext_modules,
         nthreads=n_jobs,
         compile_time_env={
-            'SKLEARN_OPENMP_PARALLELISM_ENABLED': sklearn._OPENMP_SUPPORTED},
+            'SKLEARN_OPENMP_PARALLELISM_ENABLED': afsklearn._OPENMP_SUPPORTED},
         compiler_directives={'language_level': 3})
 
 

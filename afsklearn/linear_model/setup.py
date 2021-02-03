@@ -1,7 +1,7 @@
 import os
 import numpy
 
-from sklearn._build_utils import gen_from_templates
+from afsklearn._build_utils import gen_from_templates
 
 
 def configuration(parent_package='', top_path=None):
@@ -24,7 +24,7 @@ def configuration(parent_package='', top_path=None):
                          libraries=libraries)
 
     # generate sag_fast from template
-    templates = ['sklearn/linear_model/_sag_fast.pyx.tp']
+    templates = ['afsklearn/linear_model/_sag_fast.pyx.tp']
     gen_from_templates(templates, top_path)
 
     config.add_extension('_sag_fast',
