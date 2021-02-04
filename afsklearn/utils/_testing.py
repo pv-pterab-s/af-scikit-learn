@@ -47,10 +47,10 @@ from numpy.testing import assert_array_less
 import numpy as np
 import joblib
 
-import sklearn
-from sklearn.utils import IS_PYPY, _IS_32BIT
-from sklearn.utils.multiclass import check_classification_targets
-from sklearn.utils.validation import (
+import afsklearn
+from afsklearn.utils import IS_PYPY, _IS_32BIT
+from afsklearn.utils.multiclass import check_classification_targets
+from afsklearn.utils.validation import (
     check_array,
     check_is_fitted,
     check_X_y,
@@ -955,7 +955,7 @@ class MinimalRegressor:
         return np.ones(shape=(X.shape[0],)) * self._mean
 
     def score(self, X, y):
-        from sklearn.metrics import r2_score
+        from afsklearn.metrics import r2_score
         return r2_score(y, self.predict(X))
 
 

@@ -4,7 +4,7 @@ from io import StringIO
 import uuid
 import html
 
-from sklearn import config_context
+from afsklearn import config_context
 
 
 class _VisualBlock:
