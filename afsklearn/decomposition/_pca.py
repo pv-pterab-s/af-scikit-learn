@@ -14,6 +14,7 @@ from math import log, sqrt
 import numbers
 
 import numpy as np
+import arrayfire as af
 from scipy import linalg
 from scipy.special import gammaln
 from scipy.sparse import issparse
@@ -26,6 +27,7 @@ from ..utils.extmath import fast_logdet, randomized_svd, svd_flip
 from ..utils.extmath import stable_cumsum
 from ..utils.validation import check_is_fitted
 from ..utils.validation import _deprecate_positional_args
+from ..utils.validation import is_arrayfire_array
 
 
 def _assess_dimension(spectrum, rank, n_samples):
@@ -454,8 +456,20 @@ class PCA(_BasePCA):
                                  % (n_components, type(n_components)))
 
         # Center data
-        self.mean_ = np.mean(X, axis=0)
-        X -= self.mean_
+        if isinstance(X, np.ndarray):
+            self.mean_ = np.mean(X, axis=0)
+            X -= self.mean_
+        elif is_arrayfire_array(X):
+            self.mean_ = af.mean(X, dim=0)
+            X -= af.tile(self.mean_, X.dims()[0])
+
+        if isinstance(X, np.ndarray):
+            U, S, Vt = linalg.svd(X, full_matrices=False)
+        elif is_arrayfire_array(X):
+            U, S, Vt = af.svd(X)
+            U = U[:, 0:2]
+            U = U.to_ndarray(); S = S.to_ndarray(); Vt = Vt.to_ndarray()
+
 
         U, S, Vt = linalg.svd(X, full_matrices=False)
         # flip eigenvectors' sign to enforce deterministic output
@@ -530,8 +544,12 @@ class PCA(_BasePCA):
         random_state = check_random_state(self.random_state)
 
         # Center data
-        self.mean_ = np.mean(X, axis=0)
-        X -= self.mean_
+        if isinstance(X, np.ndarray):
+            self.mean_ = np.mean(X, axis=0)
+            X -= self.mean_
+        elif is_arrayfire_array(X):
+            self.mean_ = af.mean(X, dim=0)
+            X -= af.tile(self.mean_, X.dims()[0])
 
         if svd_solver == 'arpack':
             v0 = _init_arpack_v0(min(X.shape), random_state)
