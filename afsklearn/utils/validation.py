@@ -1,3 +1,4 @@
+# -*- compile-command: ". ~/0.dev/bin/activate && . ~/workon_af.sh && cd ~/af-scikit-learn && python 1.af_test.py"; -*-
 """Utilities for input validation"""
 
 # Authors: Olivier Grisel
@@ -404,7 +405,7 @@ def is_arrayfire_array(obj):
     """True if array from arrayfire"""
     return hasattr(obj, 'device_ptr')
 
-def _number_of_dimensions(array):
+def number_of_dimensions(array):
     """Dimensionality of array regardless if numpy or arrayfire"""
     if isinstance(array, np.ndarray):
         return array.ndim
@@ -637,14 +638,14 @@ def check_array(array, accept_sparse=False, *, accept_large_sparse=True,
 
         if ensure_2d:
             # If input is scalar raise error
-            if _number_of_dimensions(array) == 0:
+            if number_of_dimensions(array) == 0:
                 raise ValueError(
                     "Expected 2D array, got scalar array instead:\narray={}.\n"
                     "Reshape your data either using array.reshape(-1, 1) if "
                     "your data has a single feature or array.reshape(1, -1) "
                     "if it contains a single sample.".format(array))
             # If input is 1D raise error
-            if _number_of_dimensions(array) == 1:
+            if number_of_dimensions(array) == 1:
                 raise ValueError(
                     "Expected 2D array, got 1D array instead:\narray={}.\n"
                     "Reshape your data either using array.reshape(-1, 1) if "
@@ -666,7 +667,7 @@ def check_array(array, accept_sparse=False, *, accept_large_sparse=True,
                 raise ValueError(
                     "Unable to convert array of bytes/strings "
                     "into decimal numbers with dtype='numeric'") from e
-        if not allow_nd and _number_of_dimensions(array) >= 3:
+        if not allow_nd and number_of_dimensions(array) >= 3:
             raise ValueError("Found array with dim %d. %s expected <= 2."
                              % (array.ndim, estimator_name))
 
@@ -682,7 +683,7 @@ def check_array(array, accept_sparse=False, *, accept_large_sparse=True,
                              % (n_samples, array.shape, ensure_min_samples,
                                 context))
 
-    if ensure_min_features > 0 and _number_of_dimensions(array) == 2:
+    if ensure_min_features > 0 and number_of_dimensions(array) == 2:
         n_features = array.shape[1]
         if n_features < ensure_min_features:
             raise ValueError("Found array with %d feature(s) (shape=%s) while"

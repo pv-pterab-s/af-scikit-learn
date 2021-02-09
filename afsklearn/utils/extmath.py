@@ -1,3 +1,5 @@
+# -*- compile-command: ". ~/0.dev/bin/activate && . ~/workon_af.sh && cd ~/t-af-scikit-learn && python 1.af_test.py"; -*-
+# AF_PRINT_ERRORS=1 AF_TRACE=all
 """
 Extended math utilities.
 """
@@ -14,6 +16,7 @@ Extended math utilities.
 import warnings
 
 import numpy as np
+import arrayfire as af
 from scipy import linalg, sparse
 
 from . import check_random_state
@@ -21,6 +24,14 @@ from ._logistic_sigmoid import _log_logistic_sigmoid
 from .sparsefuncs_fast import csr_row_norms
 from .validation import check_array
 from .validation import _deprecate_positional_args
+from .validation import is_arrayfire_array
+from .validation import number_of_dimensions
+import pdb; D = pdb.set_trace
+def Z(s):
+    if is_arrayfire_array(s):
+        print(s.to_ndarray())
+    else:
+        print(s)
 
 
 def squared_norm(x):
@@ -132,7 +143,7 @@ def safe_sparse_dot(a, b, *, dense_output=False):
     dot_product : {ndarray, sparse matrix}
         Sparse if ``a`` and ``b`` are sparse and ``dense_output=False``.
     """
-    if a.ndim > 2 or b.ndim > 2:
+    if number_of_dimensions(a) > 2 or number_of_dimensions(b) > 2:
         if sparse.issparse(a):
             # sparse is always 2D. Implies b is 3D+
             # [i, j] @ [k, ..., l, m, n] -> [i, k, ..., l, n]
@@ -149,7 +160,10 @@ def safe_sparse_dot(a, b, *, dense_output=False):
         else:
             ret = np.dot(a, b)
     else:
-        ret = a @ b
+        if is_arrayfire_array(a) and is_arrayfire_array(b):
+            ret = af.matmul(a, b)
+        else:
+            ret = a @ b
 
     if (sparse.issparse(a) and sparse.issparse(b)
             and dense_output and hasattr(ret, "toarray")):
@@ -211,9 +225,15 @@ def randomized_range_finder(A, *, size, n_iter,
     random_state = check_random_state(random_state)
 
     # Generating normal random vectors with shape: (A.shape[1], size)
-    Q = random_state.normal(size=(A.shape[1], size))
-    if A.dtype.kind == 'f':
-        # Ensure f32 is preserved as f32
+    if is_arrayfire_array(A):
+        Q = af.randu(A.shape[0], A.shape[1])
+    else:
+        Q = random_state.normal(size=(A.shape[1], size))
+    # Ensure f32 is preserved as f32
+    if is_arrayfire_array(A):
+        if A.dtype() == af.Dtype.f32:
+            Q = Q.as_type(af.Dtype.f32)
+    elif A.dtype.kind == 'f':
         Q = Q.astype(A.dtype, copy=False)
 
     # Deal with "auto" mode
@@ -230,15 +250,27 @@ def randomized_range_finder(A, *, size, n_iter,
             Q = safe_sparse_dot(A, Q)
             Q = safe_sparse_dot(A.T, Q)
         elif power_iteration_normalizer == 'LU':
-            Q, _ = linalg.lu(safe_sparse_dot(A, Q), permute_l=True)
-            Q, _ = linalg.lu(safe_sparse_dot(A.T, Q), permute_l=True)
+            if is_arrayfire_array(A):
+                # should be...
+                # [[ 1.  0.]
+                #  [-1.  1.]]
+                # [[1. 0.]
+                #  [1. 1.]]
+                Q, _, _ = af.lapack.lu(safe_sparse_dot(A, Q))
+                Q, _, _ = af.lapack.lu(safe_sparse_dot(A.T, Q))
+            else:
+                Q, _ = linalg.lu(safe_sparse_dot(A, Q), permute_l=True)
+                Q, _ = linalg.lu(safe_sparse_dot(A.T, Q), permute_l=True)
         elif power_iteration_normalizer == 'QR':
             Q, _ = linalg.qr(safe_sparse_dot(A, Q), mode='economic')
             Q, _ = linalg.qr(safe_sparse_dot(A.T, Q), mode='economic')
 
     # Sample the range of A using by linear projection of Q
     # Extract an orthonormal basis
-    Q, _ = linalg.qr(safe_sparse_dot(A, Q), mode='economic')
+    if is_arrayfire_array(Q):
+        Q, _, _ = af.qr(safe_sparse_dot(A, Q))
+    else:
+        Q, _ = linalg.qr(safe_sparse_dot(A, Q), mode='economic')
     return Q
 
 
@@ -354,11 +386,19 @@ def randomized_svd(M, n_components, *, n_oversamples=10, n_iter='auto',
     B = safe_sparse_dot(Q.T, M)
 
     # compute the SVD on the thin matrix: (k + p) wide
-    Uhat, s, Vt = linalg.svd(B, full_matrices=False)
+    if is_arrayfire_array(Q):
+        Uhat, s, Vt = af.svd(B)
+    else:
+        Uhat, s, Vt = linalg.svd(B, full_matrices=False)
 
     del B
-    U = np.dot(Q, Uhat)
+    if is_arrayfire_array(Q):
+        U = af.matmul(Q, Uhat)
+    else:
+        U = np.dot(Q, Uhat)
 
+    if is_arrayfire_array(U):
+        U = U.to_ndarray(); s = s.to_ndarray(); Vt = Vt.to_ndarray()
     if flip_sign:
         if not transpose:
             U, Vt = svd_flip(U, Vt)
