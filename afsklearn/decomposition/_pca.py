@@ -421,7 +421,7 @@ class PCA(_BasePCA):
         self._fit_svd_solver = self.svd_solver
         if self._fit_svd_solver == 'auto':
             # Small problem or n_components == 'mle', just call full PCA
-            if max(X.shape) <= 1 or n_components == 'mle':
+            if max(X.shape) <= 500 or n_components == 'mle':
                 self._fit_svd_solver = 'full'
             elif n_components >= 1 and n_components < .8 * min(X.shape):
                 self._fit_svd_solver = 'randomized'
@@ -576,7 +576,6 @@ class PCA(_BasePCA):
 
         # Get variance explained by singular values
         self.explained_variance_ = (S ** 2) / (n_samples - 1)
-        D()
         total_var = np.var(X, ddof=1, axis=0)
         self.explained_variance_ratio_ = \
             self.explained_variance_ / total_var.sum()
